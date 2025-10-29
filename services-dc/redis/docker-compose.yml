@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    restart: unless-stopped
+
+    # Persist Redis data
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+
+    # Security and configuration
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379" # expose only if needed (e.g., for local dev)
+
+    environment:
+      - REDIS_USER=${REDIS_PASSWORD:-admin}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-u",
+          "redis://${REDIS_USER:-admin}:${REDIS_PASSWORD:-changeme123}@localhost:6379",
+          "ping",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # small monitoring tool that collects metrics from Redis and exports them for Prometheus
+  # redis_exporter:
+  #   image: oliver006/redis_exporter:latest
+  #   container_name: redis_exporter
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_USER=admin
+  #     - REDIS_PASSWORD=SuperSecret123
+  #   ports:
+  #     - "9121:9121" # Prometheus metrics endpoint
+
+volumes:
+  redis_data:
