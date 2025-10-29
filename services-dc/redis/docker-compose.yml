@@ -18,7 +18,7 @@ services:
       - "${REDIS_HOST_PORT:-6379}:6379" # expose only if needed (e.g., for local dev)
 
     environment:
-      - REDIS_USER=${REDIS_PASSWORD:-admin}
+      - REDIS_USER=${REDIS_USER:-admin}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
 
     healthcheck:
