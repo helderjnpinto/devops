@@ -1,0 +1,14 @@
+services:
+  openobserve:
+    image: public.ecr.aws/zinclabs/openobserve:v0.80.0-rc2
+    container_name: openobserve
+    restart: unless-stopped
+    
+    env_file:
+      - .env
+    
+    volumes:
+      - ./data:/data
+    
+    ports:
+      - "5080:5080"
