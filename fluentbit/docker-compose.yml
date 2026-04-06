@@ -13,6 +13,8 @@ services:
       - ./data:/fluent-bit/data
     environment:
       - FLUENT_BIT_LOG_LEVEL=info
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - fluent-bit-network
 
