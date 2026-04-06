@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  fluent-bit:
+    build: .
+    container_name: fluent-bit
+    restart: unless-stopped
+    ports:
+      - "2020:2020"  # HTTP API and metrics
+    volumes:
+      - ./fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml:ro
+      - ./logs:/var/log:ro
+      - ./data:/fluent-bit/data
+    environment:
+      - FLUENT_BIT_LOG_LEVEL=info
+    networks:
+      - fluent-bit-network
+
+volumes:
+  fluent-bit-data:
+
+networks:
+  fluent-bit-network:
+    driver: bridge
