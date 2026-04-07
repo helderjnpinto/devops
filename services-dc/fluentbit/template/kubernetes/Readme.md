@@ -8,7 +8,7 @@
 
 ## Docs for reference
 
-- https://docs.fluentbit.io/manual/installation/downloads/kubernetes
+- <https://docs.fluentbit.io/manual/installation/downloads/kubernetes>
 
 ## Installation Steps
 
@@ -86,3 +86,64 @@ helm upgrade --install fluent-bit fluent/fluent-bit-collector \
 ```bash
 kubectl get pods -n logging
 ```
+
+## Maintenance
+
+### Configuration Updates
+
+Fluent Bit is configured with automatic config reload enabled. When you update the ConfigMap, Fluent Bit will automatically detect changes and reload the configuration without requiring a pod restart.
+
+#### Automatic Reload Features
+
+- **Config_Watch**: Monitors configuration files for changes
+- **Grace Period**: 30 seconds to complete current processing before reload
+
+#### Update Configuration
+
+1. **Edit the ConfigMap**:
+
+```bash
+kubectl edit configmap fluentbit-config --namespace logging
+```
+
+2. **Or apply changes from file**:
+
+```bash
+kubectl apply -f fluentbit-config.yaml
+```
+
+3. **Verify reload** (automatic):
+
+```bash
+kubectl logs -l app.kubernetes.io/name=fluent-bit --namespace logging --tail=20
+```
+
+Look for messages like:
+
+```text
+[info] [engine] detected configuration changes, reloading
+[info] [output] http.0: restored
+```
+
+#### Manual Reload (if needed)
+
+If automatic reload doesn't work:
+
+```bash
+# Restart Fluent Bit pods
+kubectl rollout restart daemonset/fluent-bit --namespace logging
+
+# Or use HTTP API
+curl -X POST http://fluent-bit.logging.svc.cluster.local:2020/api/v1/reload
+```
+
+#### Optional: Install Reloader
+
+For enhanced ConfigMap change detection:
+
+```bash
+helm repo add stakater https://stakater.github.io/stakater-charts
+helm install reloader stakater/reloader --namespace default
+```
+
+The annotation `configmap.reloader.stakater.com/reload: "true"` is already included in the values.yaml for this integration.
