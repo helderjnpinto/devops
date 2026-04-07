@@ -1,0 +1,57 @@
+# Example values.yaml for Fluent Bit with OpenObserve integration
+# This file demonstrates common configuration options for deploying Fluent Bit
+# to collect logs and send them to OpenObserve
+
+# Deployment mode: DaemonSet (default) or Deployment
+kind: DaemonSet
+
+# Image configuration
+image:
+  repository: cr.fluentbit.io/fluent/fluent-bit
+  tag: "5.0.2"
+  pullPolicy: IfNotPresent
+
+# Resource limits and requests
+resources:
+  limits:
+    memory: 128Mi
+    cpu: 100m
+  requests:
+    memory: 64Mi
+    cpu: 50m
+
+# Enable service monitor for Prometheus metrics
+serviceMonitor:
+  enabled: false
+  namespace: monitoring
+  interval: 30s
+
+# Custom Fluent Bit configuration
+config:
+  inputs: |
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*.log
+        Parser docker
+        Tag kube.*
+        Refresh_Interval 5
+        Mem_Buf_Limit 50MB
+        Skip_Long_Lines On
+
+  outputs: |
+    [OUTPUT]
+        Name http
+        Match kube.*
+        Host ${OPENOBSERVE_HOST}
+        Port ${OPENOBSERVE_PORT}
+        URI /api/default/_json
+        HTTP_User ${OPENOBSERVE_USERNAME}
+        HTTP_Passwd ${OPENOBSERVE_PASSWORD}
+        Format json
+        tls On
+        tls.verify Off
+
+# Environment variables from secrets
+envFrom:
+  - secretRef:
+      name: openobserve-credentials

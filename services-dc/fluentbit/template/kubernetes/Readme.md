@@ -12,28 +12,30 @@
 
 ## Installation Steps
 
-1. Add the Fluent Bit Helm repository:
+If you are using google cloud you may see similar daemonsets already deployed by the google it self.
 
-Use the following command to add the Fluent Helm charts repository
+TODO: Check if we can disable the existing google logging and use only our fluentbit configuration.
+
+1 - Add the Fluent Bit Helm repository:
+
+Use the following command to add the Fluent Helm charts repository:
 
 ```bash
-
 helm repo add fluent https://fluent.github.io/helm-charts
+helm repo update
 ```
 
-To validate that the repository was added, run helm search repo fluent to ensure the charts were added. The default chart can then be installed by running the following command:
+Verify the repository was added:
 
 ```bash
-helm upgrade --install fluent-bit fluent/fluent-bit
+helm search repo fluent
 ```
 
-1. Create a namespace for logging:
+2 - Create a secret with your OpenObserve credentials:
 
 ```bash
 kubectl create namespace logging
 ```
-
-3. Create a secret with your OpenObserve credentials:
 
 ```bash
 kubectl create secret generic openobserve-credentials \
@@ -44,17 +46,43 @@ kubectl create secret generic openobserve-credentials \
   --from-literal=password="your-password"
 ```
 
-4. Install Fluent Bit using the Helm chart:
+3 - Install Fluent Bit using the Helm chart:
+
+### Basic Installation
 
 ```bash
-helm install fluent-bit fluent/fluent-bit \
+helm upgrade --install fluent-bit fluent/fluent-bit-collector \
   --namespace logging \
-  -f values.yaml
+  --create-namespace
 ```
 
-5. Verify the installation:
+### Installation with Custom Values
+
+Create a custom `values.yml` file. You can use the provided example as a starting point:
+
+```bash
+cp values.yaml my-custom-values.yaml
+```
+
+The example `values.yaml` file includes:
+
+- Custom image configuration
+- Resource limits and requests  
+- Prometheus service monitor setup
+- Custom Fluent Bit configuration for OpenObserve integration
+- Environment variables from secrets
+
+Then install with your custom values:
+
+```bash
+helm upgrade --install fluent-bit fluent/fluent-bit-collector \
+  --namespace logging \
+  --create-namespace \
+  --values values.yaml
+```
+
+4 - Verify the installation:
 
 ```bash
 kubectl get pods -n logging
 ```
-
