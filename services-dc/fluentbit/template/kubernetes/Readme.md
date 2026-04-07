@@ -78,7 +78,7 @@ Then install with your custom values:
 helm upgrade --install fluent-bit fluent/fluent-bit-collector \
   --namespace logging \
   --create-namespace \
-  --values values.yaml
+  --values my-custom-values.yaml
 ```
 
 4 - Verify the installation:
