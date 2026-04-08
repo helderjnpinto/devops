@@ -1,35 +1,87 @@
-# Example values.yaml for Fluent Bit with OpenObserve integration
-# This file demonstrates common configuration options for deploying Fluent Bit
-# to collect logs and send them to OpenObserve
-
-# Deployment mode: DaemonSet (default) or Deployment
 kind: DaemonSet
 
-# Image configuration
 image:
   repository: cr.fluentbit.io/fluent/fluent-bit
   tag: "5.0.2"
   pullPolicy: IfNotPresent
 
-# Resource limits and requests
 resources:
-  limits:
-    memory: 128Mi
-    cpu: 100m
   requests:
-    memory: 64Mi
     cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
 
-# Enable service monitor for Prometheus metrics
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: fluentbit
+  annotations: {}
+
+existingConfigMap: fluentbit-config
+
+env:
+  - name: OPENOBSERVE_HOST
+    valueFrom:
+      secretKeyRef:
+        name: openobserve-credentials
+        key: host
+  - name: OPENOBSERVE_PORT
+    valueFrom:
+      secretKeyRef:
+        name: openobserve-credentials
+        key: port
+  - name: OPENOBSERVE_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: openobserve-credentials
+        key: username
+  - name: OPENOBSERVE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: openobserve-credentials
+        key: password
+
+# Needed because the chart defaults to fluent-bit.conf, not fluent-bit.yaml
+args:
+  - --workdir=/fluent-bit/etc
+  - --config=/fluent-bit/etc/conf/fluent-bit.yaml
+
+service:
+  type: ClusterIP
+  port: 2020
+
 serviceMonitor:
   enabled: false
-  namespace: monitoring
-  interval: 30s
 
-# Use existing ConfigMap instead
-existingConfigMap: "fluentbit-config"
+podSecurityContext: {}
 
-# Environment variables from secrets
-envFrom:
-  - secretRef:
-      name: openobserve-credentials
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+affinity: {}
+tolerations: []
+
+daemonSetVolumeMounts:
+  - name: varlog
+    mountPath: /var/log
+  - name: varlibdockercontainers
+    mountPath: /var/lib/docker/containers
+    readOnly: true
+  - name: etcmachineid
+    mountPath: /etc/machine-id
+    readOnly: true
+
+networkPolicy:
+  enabled: false
+
+podAnnotations: {}
+podLabels: {}

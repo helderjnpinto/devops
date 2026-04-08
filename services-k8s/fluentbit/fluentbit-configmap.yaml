@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentbit-config
+  namespace: logging
+data:
+  fluent-bit.yaml: |
+    service:
+      flush: 5
+      log_level: info
+      daemon: false
+      http_server: on
+      http_listen: 0.0.0.0
+      http_port: 2020
+      hot_reload: on
+
+      storage.path: /tmp/fluent-bit-storage
+      storage.sync: normal
+      storage.checksum: on
+      storage.backlog.mem_limit: 64M
+
+    pipeline:
+      inputs:
+        - name: tail
+          path: /var/log/containers/*.log
+          tag: kube.*
+          refresh_interval: 5
+          mem_buf_limit: 128MB
+          skip_long_lines: true
+          skip_empty_lines: true
+          multiline.parser: docker, cri
+          read_from_head: false
+
+      filters:
+        - name: kubernetes
+          match: kube.*
+          kube_url: https://kubernetes.default.svc:443
+          kube_ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          kube_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+          kube_tag_prefix: kube.var.log.containers.
+          merge_log: true
+          keep_log: false
+          k8s_logging_parser: true
+          k8s_logging_exclude: true
+          buffer_size: 1m
+          use_kubelet: true
+          labels: true
+          annotations: false
+
+        - name: modify
+          match: kube.*
+          add:
+            - cluster gke-staging
+            - source fluentbit
+            - log_type kubernetes
+
+        - name: rewrite_tag
+          match: kube.*
+          rule:
+            - $kubernetes['namespace_name'] ^(kube-system|logging|monitoring|ingress-nginx|istio-system|cert-manager)$ platform.$TAG false
+
+        - name: rewrite_tag
+          match: kube.*
+          rule:
+            - $kubernetes['namespace_name'] ^.*$ apps.$TAG true
+
+      outputs:
+        - name: http
+          match: apps.*
+          host: ${OPENOBSERVE_HOST}
+          port: ${OPENOBSERVE_PORT}
+          uri: /api/default/k8s_apps/_json
+          http_user: ${OPENOBSERVE_USERNAME}
+          http_passwd: ${OPENOBSERVE_PASSWORD}
+          format: json
+          tls: off
+          compress: gzip
+          retry_limit: false
+          json_date_key: _timestamp
+          json_date_format: iso8601
+
+        - name: http
+          match: platform.*
+          host: ${OPENOBSERVE_HOST}
+          port: ${OPENOBSERVE_PORT}
+          uri: /api/default/k8s_platform/_json
+          http_user: ${OPENOBSERVE_USERNAME}
+          http_passwd: ${OPENOBSERVE_PASSWORD}
+          format: json
+          tls: off
+          compress: gzip
+          retry_limit: false
+          json_date_key: _timestamp
+          json_date_format: iso8601
+
+    parsers:
+      - name: docker
+        format: json
+        time_key: time
+        time_format: "%Y-%m-%dT%H:%M:%S.%L"
+        time_keep: on
+
+      - name: cri
+        format: regex
+        regex: "^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$"
+        time_key: time
+        time_format: "%Y-%m-%dT%H:%M:%S.%L%z"
+        time_keep: on
