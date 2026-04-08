@@ -7,11 +7,11 @@ image:
 
 resources:
   requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
     cpu: 50m
     memory: 64Mi
-  limits:
-    cpu: 100m
-    memory: 128Mi
 
 rbac:
   create: true
@@ -70,14 +70,16 @@ nodeSelector: {}
 affinity: {}
 tolerations: []
 
+# Override chart defaults for GKE Autopilot:
+# only /var/log, and read-only
+daemonSetVolumes:
+  - name: varlog
+    hostPath:
+      path: /var/log
+
 daemonSetVolumeMounts:
   - name: varlog
     mountPath: /var/log
-  - name: varlibdockercontainers
-    mountPath: /var/lib/docker/containers
-    readOnly: true
-  - name: etcmachineid
-    mountPath: /etc/machine-id
     readOnly: true
 
 networkPolicy:

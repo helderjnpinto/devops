@@ -17,7 +17,7 @@ data:
       storage.path: /tmp/fluent-bit-storage
       storage.sync: normal
       storage.checksum: on
-      storage.backlog.mem_limit: 64M
+      storage.backlog.mem_limit: 32M
 
     pipeline:
       inputs:
@@ -25,7 +25,7 @@ data:
           path: /var/log/containers/*.log
           tag: kube.*
           refresh_interval: 5
-          mem_buf_limit: 128MB
+          mem_buf_limit: 64MB
           skip_long_lines: true
           skip_empty_lines: true
           multiline.parser: docker, cri
@@ -40,10 +40,10 @@ data:
           kube_tag_prefix: kube.var.log.containers.
           merge_log: true
           keep_log: false
-          k8s_logging_parser: true
-          k8s_logging_exclude: true
-          buffer_size: 1m
-          use_kubelet: true
+          k8s-logging.parser: on
+          k8s-logging.exclude: on
+          buffer_size: 512k
+          use_kubelet: false
           labels: true
           annotations: false
 
