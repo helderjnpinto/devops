@@ -1,20 +1,20 @@
 {
   "version": 8,
-  "dashboardId": "7447630119088160768",
-  "title": "K8s_Apps",
-  "description": "All apps in kubernetes",
+  "dashboardId": "7447762034835324928",
+  "title": "K8s_platform",
+  "description": "Platform data",
   "role": "",
   "owner": "",
-  "created": "2026-04-08T13:03:10.642Z",
+  "created": "2026-04-08T21:47:21.809Z",
   "tabs": [
     {
       "tabId": "overview",
       "name": "Overview",
       "panels": [
         {
-          "id": "Panel_ID1002",
+          "id": "Panel_ID2001",
           "type": "metric",
-          "title": "Error Logs",
+          "title": "Total Platform Logs",
           "description": "",
           "config": {
             "show_legends": false,
@@ -57,7 +57,7 @@
             "background": {
               "type": "single",
               "value": {
-                "color": "#4d0000"
+                "color": "#0b687f"
               }
             },
             "trellis": {
@@ -70,11 +70,11 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT count(_timestamp) AS value FROM \"k8s_apps\" WHERE lower(coalesce(level,'')) = 'error' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%exception%' OR lower(coalesce(msg,'')) LIKE '%exception%' OR lower(coalesce(log,'')) LIKE '%exception%' OR lower(coalesce(message,'')) LIKE '%panic%' OR lower(coalesce(msg,'')) LIKE '%panic%' OR lower(coalesce(log,'')) LIKE '%panic%'",
+              "query": "SELECT count(_timestamp) AS value FROM \"k8s_platform\"",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
-                "stream": "k8s_apps",
+                "stream": "k8s_platform",
                 "stream_type": "logs",
                 "x": [],
                 "y": [
@@ -119,10 +119,85 @@
             }
           ],
           "layout": {
-            "x": 53,
+            "x": 0,
             "y": 0,
-            "w": 36,
-            "h": 9,
+            "w": 34,
+            "h": 8,
+            "i": 1
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2002",
+          "type": "metric",
+          "title": "Platform Errors",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT count(_timestamp) AS value FROM \"k8s_platform\" WHERE lower(coalesce(level,'')) = 'error' OR lower(coalesce(severity,'')) = 'error' OR coalesce(error,'') <> '' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%exception%' OR lower(coalesce(msg,'')) LIKE '%exception%' OR lower(coalesce(log,'')) LIKE '%exception%' OR lower(coalesce(message,'')) LIKE '%panic%' OR lower(coalesce(msg,'')) LIKE '%panic%' OR lower(coalesce(log,'')) LIKE '%panic%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%'",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [],
+                "y": [
+                  {
+                    "label": "value",
+                    "alias": "value",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "value",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 24,
+            "w": 34,
+            "h": 8,
             "i": 2
           },
           "htmlContent": "",
@@ -130,7 +205,7 @@
           "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
         },
         {
-          "id": "Panel_ID1003",
+          "id": "Panel_ID2003",
           "type": "metric",
           "title": "Namespaces",
           "description": "",
@@ -175,7 +250,7 @@
             "background": {
               "type": "single",
               "value": {
-                "color": "#155b53"
+                "color": "#285d4b"
               }
             },
             "trellis": {
@@ -188,11 +263,11 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT count(DISTINCT kubernetes_namespace_name) AS value FROM \"k8s_apps\" WHERE kubernetes_namespace_name IS NOT NULL",
+              "query": "SELECT count(DISTINCT kubernetes_namespace_name) AS value FROM \"k8s_platform\" WHERE kubernetes_namespace_name IS NOT NULL",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
-                "stream": "k8s_apps",
+                "stream": "k8s_platform",
                 "stream_type": "logs",
                 "x": [],
                 "y": [
@@ -237,10 +312,10 @@
             }
           ],
           "layout": {
-            "x": 89,
-            "y": 0,
-            "w": 30,
-            "h": 9,
+            "x": 0,
+            "y": 16,
+            "w": 34,
+            "h": 8,
             "i": 3
           },
           "htmlContent": "",
@@ -248,7 +323,7 @@
           "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
         },
         {
-          "id": "Panel_ID1004",
+          "id": "Panel_ID2004",
           "type": "metric",
           "title": "Pods",
           "description": "",
@@ -257,17 +332,60 @@
             "legends_position": null,
             "unit": "numbers",
             "decimals": 0,
+            "step_value": "0",
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "legend_height": {
+              "unit": "px"
+            },
             "base_map": null,
-            "map_view": null
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": null,
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "background": {
+              "type": "single",
+              "value": {
+                "color": "#390f99"
+              }
+            },
+            "trellis": {
+              "layout": null,
+              "num_of_columns": 1,
+              "group_by_y_axis": false
+            },
+            "show_gridlines": true
           },
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT count(DISTINCT kubernetes_pod_name) AS value FROM \"k8s_apps\" WHERE kubernetes_pod_name IS NOT NULL",
+              "query": "SELECT count(DISTINCT kubernetes_pod_name) AS value FROM \"k8s_platform\" WHERE kubernetes_pod_name IS NOT NULL",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
-                "stream": "k8s_apps",
+                "stream": "k8s_platform",
                 "stream_type": "logs",
                 "x": [],
                 "y": [
@@ -312,10 +430,10 @@
             }
           ],
           "layout": {
-            "x": 119,
-            "y": 0,
-            "w": 27,
-            "h": 9,
+            "x": 0,
+            "y": 8,
+            "w": 34,
+            "h": 8,
             "i": 4
           },
           "htmlContent": "",
@@ -323,9 +441,9 @@
           "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
         },
         {
-          "id": "Panel_ID1005",
+          "id": "Panel_ID2005",
           "type": "line",
-          "title": "Logs Over Time",
+          "title": "Platform Logs Over Time",
           "description": "",
           "config": {
             "show_legends": true,
@@ -339,11 +457,11 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT histogram(_timestamp) AS bucket, count(_timestamp) AS logs FROM \"k8s_apps\" GROUP BY bucket ORDER BY bucket ASC",
+              "query": "SELECT histogram(_timestamp) AS bucket, count(_timestamp) AS logs FROM \"k8s_platform\" GROUP BY bucket ORDER BY bucket ASC",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
-                "stream": "k8s_apps",
+                "stream": "k8s_platform",
                 "stream_type": "logs",
                 "x": [
                   {
@@ -408,10 +526,10 @@
             }
           ],
           "layout": {
-            "x": 0,
-            "y": 9,
-            "w": 146,
-            "h": 12,
+            "x": 101,
+            "y": 33,
+            "w": 89,
+            "h": 16,
             "i": 5
           },
           "htmlContent": "",
@@ -419,853 +537,9 @@
           "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
         },
         {
-          "id": "Panel_ID1007",
-          "type": "donut",
-          "title": "Top Namespaces",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "legends_position": "right",
-            "unit": "numbers",
-            "decimals": 0,
-            "step_value": "0",
-            "top_results_others": false,
-            "axis_border_show": false,
-            "label_option": {
-              "rotate": 0
-            },
-            "show_symbol": false,
-            "line_interpolation": "smooth",
-            "legend_width": {
-              "unit": "px"
-            },
-            "legend_height": {
-              "unit": "px"
-            },
-            "base_map": null,
-            "map_type": {
-              "type": "world"
-            },
-            "map_view": null,
-            "map_symbol_style": {
-              "size": "by Value",
-              "size_by_value": {
-                "min": 1,
-                "max": 100
-              },
-              "size_fixed": 2
-            },
-            "drilldown": [],
-            "connect_nulls": false,
-            "no_value_replacement": "",
-            "wrap_table_cells": false,
-            "table_transpose": false,
-            "table_dynamic_columns": false,
-            "color": {
-              "mode": "palette-classic",
-              "fixedColor": [],
-              "seriesBy": "last",
-              "colorBySeries": []
-            },
-            "trellis": {
-              "layout": null,
-              "num_of_columns": 1,
-              "group_by_y_axis": false
-            },
-            "show_gridlines": true,
-            "panel_time_enabled": false
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT kubernetes_namespace_name AS namespace, count(_timestamp) AS logs FROM \"k8s_apps\" WHERE kubernetes_namespace_name IS NOT NULL GROUP BY namespace ORDER BY logs DESC LIMIT 10",
-              "vrlFunctionQuery": "",
-              "customQuery": true,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [
-                  {
-                    "label": "namespace",
-                    "alias": "namespace",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "namespace",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "y": [
-                  {
-                    "label": "logs",
-                    "alias": "logs",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "logs",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              },
-              "joins": []
-            }
-          ],
-          "layout": {
-            "x": 67,
-            "y": 21,
-            "w": 79,
-            "h": 20,
-            "i": 7
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        },
-        {
-          "id": "Panel_ID1008",
-          "type": "donut",
-          "title": "Top Pods By Logs",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "legends_position": "right",
-            "unit": "numbers",
-            "decimals": 0,
-            "step_value": "0",
-            "top_results_others": false,
-            "axis_border_show": false,
-            "label_option": {
-              "rotate": 0
-            },
-            "show_symbol": false,
-            "line_interpolation": "smooth",
-            "legend_width": {
-              "unit": "px"
-            },
-            "legend_height": {
-              "unit": "px"
-            },
-            "base_map": null,
-            "map_type": {
-              "type": "world"
-            },
-            "map_view": null,
-            "map_symbol_style": {
-              "size": "by Value",
-              "size_by_value": {
-                "min": 1,
-                "max": 100
-              },
-              "size_fixed": 2
-            },
-            "drilldown": [
-              {
-                "name": "Go to logs",
-                "type": "logs",
-                "targetBlank": true,
-                "findBy": "name",
-                "data": {
-                  "url": "",
-                  "folder": "",
-                  "dashboard": "",
-                  "tab": "",
-                  "passAllVariables": true,
-                  "variables": [
-                    {
-                      "name": "",
-                      "value": ""
-                    }
-                  ],
-                  "logsMode": "auto",
-                  "logsQuery": ""
-                }
-              }
-            ],
-            "mark_line": [],
-            "connect_nulls": false,
-            "no_value_replacement": "",
-            "wrap_table_cells": false,
-            "table_transpose": false,
-            "table_dynamic_columns": false,
-            "color": {
-              "mode": "palette-classic-by-series",
-              "fixedColor": [],
-              "seriesBy": "last",
-              "colorBySeries": []
-            },
-            "trellis": {
-              "layout": null,
-              "num_of_columns": 1,
-              "group_by_y_axis": false
-            },
-            "show_gridlines": true
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT kubernetes_pod_name AS pod, count(_timestamp) AS logs FROM \"k8s_apps\" WHERE kubernetes_pod_name IS NOT NULL GROUP BY pod ORDER BY logs DESC LIMIT 10",
-              "vrlFunctionQuery": "",
-              "customQuery": true,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [
-                  {
-                    "label": "pod",
-                    "alias": "pod",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "pod",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "y": [
-                  {
-                    "label": "logs",
-                    "alias": "logs",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "logs",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              }
-            }
-          ],
-          "layout": {
-            "x": 0,
-            "y": 21,
-            "w": 67,
-            "h": 20,
-            "i": 8
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        },
-        {
-          "id": "Panel_ID1010",
-          "type": "h-bar",
-          "title": "Top Apps (label)",
-          "description": "",
-          "config": {
-            "show_legends": false,
-            "legends_position": null,
-            "unit": "numbers",
-            "decimals": 0,
-            "step_value": "0",
-            "top_results_others": false,
-            "axis_border_show": false,
-            "label_option": {
-              "rotate": 0
-            },
-            "show_symbol": false,
-            "line_interpolation": "smooth",
-            "legend_width": {
-              "unit": "px"
-            },
-            "legend_height": {
-              "unit": "px"
-            },
-            "base_map": null,
-            "map_type": {
-              "type": "world"
-            },
-            "map_view": null,
-            "map_symbol_style": {
-              "size": "by Value",
-              "size_by_value": {
-                "min": 1,
-                "max": 100
-              },
-              "size_fixed": 2
-            },
-            "drilldown": [],
-            "mark_line": [],
-            "connect_nulls": false,
-            "no_value_replacement": "",
-            "wrap_table_cells": false,
-            "table_transpose": false,
-            "table_dynamic_columns": false,
-            "color": {
-              "mode": "palette-classic",
-              "fixedColor": [],
-              "seriesBy": "last",
-              "colorBySeries": []
-            },
-            "trellis": {
-              "layout": null,
-              "num_of_columns": 1,
-              "group_by_y_axis": false
-            },
-            "show_gridlines": true
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT kubernetes_labels_app AS app, count(_timestamp) AS logs FROM \"k8s_apps\" WHERE kubernetes_labels_app IS NOT NULL GROUP BY app ORDER BY logs DESC LIMIT 10",
-              "vrlFunctionQuery": "",
-              "customQuery": true,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [
-                  {
-                    "label": "app",
-                    "alias": "app",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "app",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "y": [
-                  {
-                    "label": "logs",
-                    "alias": "logs",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "logs",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              }
-            }
-          ],
-          "layout": {
-            "x": 0,
-            "y": 41,
-            "w": 146,
-            "h": 16,
-            "i": 10
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        },
-        {
-          "id": "Panel_ID5247310",
-          "type": "metric",
-          "title": "Total logs",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "legends_position": null,
-            "decimals": 0,
-            "line_thickness": 1.5,
-            "step_value": "0",
-            "top_results_others": false,
-            "axis_border_show": false,
-            "label_option": {
-              "rotate": 0
-            },
-            "axis_label_rotate": 0,
-            "show_symbol": false,
-            "line_interpolation": "smooth",
-            "legend_width": {
-              "unit": "px"
-            },
-            "legend_height": {
-              "unit": "px"
-            },
-            "base_map": {
-              "type": "osm"
-            },
-            "map_type": {
-              "type": "world"
-            },
-            "map_view": {
-              "zoom": 1,
-              "lat": 0,
-              "lng": 0
-            },
-            "map_symbol_style": {
-              "size": "by Value",
-              "size_by_value": {
-                "min": 1,
-                "max": 100
-              },
-              "size_fixed": 2
-            },
-            "drilldown": [],
-            "mark_line": [],
-            "override_config": [],
-            "connect_nulls": false,
-            "no_value_replacement": "",
-            "wrap_table_cells": false,
-            "table_transpose": false,
-            "table_dynamic_columns": false,
-            "mappings": [],
-            "color": {
-              "mode": "palette-classic-by-series",
-              "fixedColor": [
-                "#53ca53"
-              ],
-              "seriesBy": "last",
-              "colorBySeries": []
-            },
-            "background": {
-              "type": "single",
-              "value": {
-                "color": "#550b56"
-              }
-            },
-            "trellis": {
-              "layout": null,
-              "num_of_columns": 1,
-              "group_by_y_axis": false
-            },
-            "show_gridlines": true,
-            "aggregation": "last",
-            "lat_label": "latitude",
-            "lon_label": "longitude",
-            "weight_label": "weight",
-            "name_label": "name",
-            "table_aggregations": [
-              "last"
-            ],
-            "promql_table_mode": "single",
-            "visible_columns": [],
-            "hidden_columns": [],
-            "sticky_columns": [],
-            "sticky_first_column": false,
-            "column_order": [],
-            "table_pagination": false,
-            "table_pivot_show_row_totals": false,
-            "table_pivot_show_col_totals": false,
-            "table_pivot_sticky_row_totals": false,
-            "table_pivot_sticky_col_totals": false,
-            "panel_time_enabled": false
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT count(_timestamp) as \"y_axis_1\" FROM \"k8s_apps\"",
-              "vrlFunctionQuery": "",
-              "customQuery": false,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [],
-                "y": [
-                  {
-                    "label": "Timestamp",
-                    "alias": "y_axis_1",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "_timestamp",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": false,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              },
-              "joins": []
-            }
-          ],
-          "layout": {
-            "x": 0,
-            "y": 0,
-            "w": 53,
-            "h": 9,
-            "i": 14
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        }
-      ]
-    },
-    {
-      "tabId": "52920",
-      "name": "Alerts",
-      "panels": [
-        {
-          "id": "Panel_ID1012",
-          "type": "bar",
-          "title": "Top 5xx Paths",
-          "description": "",
-          "config": {
-            "show_legends": false,
-            "legends_position": null,
-            "unit": "numbers",
-            "decimals": 0,
-            "base_map": null,
-            "map_view": null
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT path AS route, count(status) AS errors FROM \"k8s_apps\" WHERE status >= 500 AND path IS NOT NULL GROUP BY route ORDER BY errors DESC LIMIT 10",
-              "vrlFunctionQuery": "",
-              "customQuery": true,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [
-                  {
-                    "label": "route",
-                    "alias": "route",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "route",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "y": [
-                  {
-                    "label": "errors",
-                    "alias": "errors",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "errors",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              }
-            }
-          ],
-          "layout": {
-            "x": 0,
-            "y": 52,
-            "w": 32,
-            "h": 11,
-            "i": 1
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        },
-        {
-          "id": "Panel_ID1009",
-          "type": "h-bar",
-          "title": "Top Containers by Errors",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "legends_position": null,
-            "unit": "numbers",
-            "decimals": 0,
-            "step_value": "0",
-            "top_results_others": false,
-            "axis_border_show": false,
-            "label_option": {
-              "rotate": 0
-            },
-            "show_symbol": false,
-            "line_interpolation": "smooth",
-            "legend_width": {
-              "unit": "px"
-            },
-            "legend_height": {
-              "unit": "px"
-            },
-            "base_map": null,
-            "map_type": {
-              "type": "world"
-            },
-            "map_view": null,
-            "map_symbol_style": {
-              "size": "by Value",
-              "size_by_value": {
-                "min": 1,
-                "max": 100
-              },
-              "size_fixed": 2
-            },
-            "drilldown": [],
-            "mark_line": [
-              {
-                "name": "",
-                "type": "xAxis",
-                "value": ""
-              }
-            ],
-            "connect_nulls": false,
-            "no_value_replacement": "",
-            "wrap_table_cells": false,
-            "table_transpose": false,
-            "table_dynamic_columns": false,
-            "color": {
-              "mode": "palette-classic",
-              "fixedColor": [],
-              "seriesBy": "last",
-              "colorBySeries": []
-            },
-            "trellis": {
-              "layout": null,
-              "num_of_columns": 1,
-              "group_by_y_axis": false
-            },
-            "show_gridlines": true
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT\n  concat(\n    kubernetes_namespace_name, \n    ' / ', \n    kubernetes_pod_name, \n    ' / ', \n    kubernetes_container_name\n  ) AS target,\n  count(*) AS errors\nFROM \"k8s_apps\"\nWHERE \n  kubernetes_namespace_name IS NOT NULL\n  AND kubernetes_pod_name IS NOT NULL\n  AND kubernetes_container_name IS NOT NULL\n  AND kubernetes_pod_name IN ($pod)\n  AND (\n       lower(coalesce(level, '')) = 'error'\n    OR lower(coalesce(message, '')) LIKE '%error%'\n    OR lower(coalesce(msg, '')) LIKE '%error%'\n    OR lower(coalesce(log, '')) LIKE '%error%'\n    OR lower(coalesce(message, '')) LIKE '%exception%'\n    OR lower(coalesce(msg, '')) LIKE '%exception%'\n    OR lower(coalesce(log, '')) LIKE '%exception%'\n    OR lower(coalesce(message, '')) LIKE '%panic%'\n    OR lower(coalesce(msg, '')) LIKE '%panic%'\n    OR lower(coalesce(log, '')) LIKE '%panic%'\n  )\nGROUP BY target\nORDER BY errors DESC\nLIMIT 50",
-              "vrlFunctionQuery": "",
-              "customQuery": true,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [
-                  {
-                    "label": "pod_container",
-                    "alias": "target",
-                    "column": "target",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "pod_container",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "y": [
-                  {
-                    "label": "Total Errors",
-                    "alias": "errors",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "errors",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              }
-            }
-          ],
-          "layout": {
-            "x": 0,
-            "y": 0,
-            "w": 91,
-            "h": 28,
-            "i": 2
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        },
-        {
-          "id": "Panel_ID1006",
+          "id": "Panel_ID2006",
           "type": "scatter",
-          "title": "Errors Over Time",
+          "title": "Platform Errors Over Time",
           "description": "",
           "config": {
             "show_legends": true,
@@ -1299,29 +573,7 @@
               },
               "size_fixed": 2
             },
-            "drilldown": [
-              {
-                "name": "Open logs",
-                "type": "logs",
-                "targetBlank": true,
-                "findBy": "name",
-                "data": {
-                  "url": "",
-                  "folder": "",
-                  "dashboard": "",
-                  "tab": "",
-                  "passAllVariables": true,
-                  "variables": [
-                    {
-                      "name": "",
-                      "value": ""
-                    }
-                  ],
-                  "logsMode": "auto",
-                  "logsQuery": ""
-                }
-              }
-            ],
+            "drilldown": [],
             "mark_line": [],
             "connect_nulls": false,
             "no_value_replacement": "",
@@ -1329,7 +581,7 @@
             "table_transpose": false,
             "table_dynamic_columns": false,
             "color": {
-              "mode": "palette-classic",
+              "mode": "palette-classic-by-series",
               "fixedColor": [],
               "seriesBy": "last",
               "colorBySeries": []
@@ -1344,11 +596,11 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT histogram(_timestamp) AS bucket, count(_timestamp) AS errors FROM \"k8s_apps\" \nWHERE \nkubernetes_pod_name IN ($pod) AND (\n    lower(coalesce(level,'')) = 'error' \n    OR lower(coalesce(message,'')) LIKE '%error%' \n    OR lower(coalesce(msg,'')) LIKE '%error%' \n    OR lower(coalesce(log,'')) LIKE '%error%' \n    OR lower(coalesce(message,'')) LIKE '%exception%' \n    OR lower(coalesce(msg,'')) LIKE '%exception%' \n    OR lower(coalesce(log,'')) LIKE '%exception%' \n    OR lower(coalesce(message,'')) LIKE '%panic%' \n    OR lower(coalesce(msg,'')) LIKE '%panic%' \n    OR lower(coalesce(log,'')) LIKE '%panic%' \n)\nGROUP BY bucket ORDER BY bucket ASC",
+              "query": "SELECT histogram(_timestamp) AS bucket, count(_timestamp) AS errors FROM \"k8s_platform\" WHERE lower(coalesce(level,'')) = 'error' OR lower(coalesce(severity,'')) = 'error' OR coalesce(error,'') <> '' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%exception%' OR lower(coalesce(msg,'')) LIKE '%exception%' OR lower(coalesce(log,'')) LIKE '%exception%' OR lower(coalesce(message,'')) LIKE '%panic%' OR lower(coalesce(msg,'')) LIKE '%panic%' OR lower(coalesce(log,'')) LIKE '%panic%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%' GROUP BY bucket ORDER BY bucket ASC",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
-                "stream": "k8s_apps",
+                "stream": "k8s_platform",
                 "stream_type": "logs",
                 "x": [
                   {
@@ -1431,20 +683,729 @@
             }
           ],
           "layout": {
-            "x": 91,
-            "y": 28,
-            "w": 101,
-            "h": 24,
-            "i": 3
+            "x": 101,
+            "y": 15,
+            "w": 89,
+            "h": 18,
+            "i": 6
           },
           "htmlContent": "",
           "markdownContent": "",
           "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
         },
         {
-          "id": "Panel_ID1013",
+          "id": "Panel_ID2007",
+          "type": "bar",
+          "title": "Top Platform Namespaces",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT kubernetes_namespace_name AS namespace, count(_timestamp) AS logs FROM \"k8s_platform\" WHERE kubernetes_namespace_name IS NOT NULL GROUP BY namespace ORDER BY logs DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "namespace",
+                    "alias": "namespace",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "namespace",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "logs",
+                    "alias": "logs",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "logs",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 34,
+            "y": 15,
+            "w": 67,
+            "h": 18,
+            "i": 7
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2008",
+          "type": "h-bar",
+          "title": "Top Platform Pods",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT kubernetes_pod_name AS pod, count(_timestamp) AS logs FROM \"k8s_platform\" WHERE kubernetes_pod_name IS NOT NULL GROUP BY pod ORDER BY logs DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "pod",
+                    "alias": "pod",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "pod",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "logs",
+                    "alias": "logs",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "logs",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 34,
+            "y": 33,
+            "w": 67,
+            "h": 15,
+            "i": 8
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2009",
+          "type": "gauge",
+          "title": "Top Erroring Nodes",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "step_value": "0",
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "legend_height": {
+              "unit": "px"
+            },
+            "base_map": null,
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": null,
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [],
+            "mark_line": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [],
+              "seriesBy": "last",
+              "colorBySeries": []
+            },
+            "trellis": {
+              "layout": null,
+              "num_of_columns": 1,
+              "group_by_y_axis": false
+            },
+            "show_gridlines": true
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT coalesce(nodename, kubernetes_host) AS node, count(_timestamp) AS errors FROM \"k8s_platform\" WHERE coalesce(nodename, kubernetes_host) IS NOT NULL AND (lower(coalesce(level,'')) = 'error' OR lower(coalesce(severity,'')) = 'error' OR coalesce(error,'') <> '' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%') GROUP BY node ORDER BY errors DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "node",
+                    "alias": "node",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "node",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "errors",
+                    "alias": "errors",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "errors",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 34,
+            "y": 0,
+            "w": 156,
+            "h": 15,
+            "i": 9
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2010",
+          "type": "bar",
+          "title": "Top Reasons",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT reason, count(_timestamp) AS total FROM \"k8s_platform\" WHERE reason IS NOT NULL GROUP BY reason ORDER BY total DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "reason",
+                    "alias": "reason",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "reason",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "total",
+                    "alias": "total",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "total",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 32,
+            "w": 34,
+            "h": 16,
+            "i": 10
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2011",
+          "type": "bar",
+          "title": "Top Subsystems by Errors",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT subsys, count(_timestamp) AS errors FROM \"k8s_platform\" WHERE subsys IS NOT NULL AND (lower(coalesce(level,'')) = 'error' OR lower(coalesce(severity,'')) = 'error' OR coalesce(error,'') <> '' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%') GROUP BY subsys ORDER BY errors DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "subsys",
+                    "alias": "subsys",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "subsys",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "errors",
+                    "alias": "errors",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "errors",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 0,
+            "y": 48,
+            "w": 34,
+            "h": 15,
+            "i": 11
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2012",
+          "type": "bar",
+          "title": "Logging Pipeline Issues",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT kubernetes_pod_name AS pod, count(_timestamp) AS issues FROM \"k8s_platform\" WHERE kubernetes_namespace_name = 'logging' AND kubernetes_pod_name IS NOT NULL AND (lower(coalesce(message,'')) LIKE '%retry%' OR lower(coalesce(msg,'')) LIKE '%retry%' OR lower(coalesce(log,'')) LIKE '%retry%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%' OR lower(coalesce(message,'')) LIKE '%timeout%' OR lower(coalesce(msg,'')) LIKE '%timeout%' OR lower(coalesce(log,'')) LIKE '%timeout%' OR lower(coalesce(message,'')) LIKE '%dropped%' OR lower(coalesce(msg,'')) LIKE '%dropped%' OR lower(coalesce(log,'')) LIKE '%dropped%' OR lower(coalesce(message,'')) LIKE '%cannot%' OR lower(coalesce(msg,'')) LIKE '%cannot%' OR lower(coalesce(log,'')) LIKE '%cannot%') GROUP BY pod ORDER BY issues DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "pod",
+                    "alias": "pod",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "pod",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "issues",
+                    "alias": "issues",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "issues",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 101,
+            "y": 49,
+            "w": 89,
+            "h": 14,
+            "i": 12
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2013",
+          "type": "bar",
+          "title": "DNS / Network Issues",
+          "description": "",
+          "config": {
+            "show_legends": false,
+            "legends_position": null,
+            "unit": "numbers",
+            "decimals": 0,
+            "base_map": null,
+            "map_view": null
+          },
+          "queryType": "sql",
+          "queries": [
+            {
+              "query": "SELECT coalesce(kubernetes_pod_name, module, subsys) AS target, count(_timestamp) AS issues FROM \"k8s_platform\" WHERE coalesce(kubernetes_pod_name, module, subsys) IS NOT NULL AND (lower(coalesce(message,'')) LIKE '%i/o timeout%' OR lower(coalesce(msg,'')) LIKE '%i/o timeout%' OR lower(coalesce(log,'')) LIKE '%i/o timeout%' OR lower(coalesce(message,'')) LIKE '%no route to host%' OR lower(coalesce(msg,'')) LIKE '%no route to host%' OR lower(coalesce(log,'')) LIKE '%no route to host%' OR lower(coalesce(message,'')) LIKE '%servfail%' OR lower(coalesce(msg,'')) LIKE '%servfail%' OR lower(coalesce(log,'')) LIKE '%servfail%' OR lower(coalesce(message,'')) LIKE '%nxdomain%' OR lower(coalesce(msg,'')) LIKE '%nxdomain%' OR lower(coalesce(log,'')) LIKE '%nxdomain%' OR lower(coalesce(message,'')) LIKE '%connection refused%' OR lower(coalesce(msg,'')) LIKE '%connection refused%' OR lower(coalesce(log,'')) LIKE '%connection refused%' OR lower(coalesce(message,'')) LIKE '%lookup %' OR lower(coalesce(msg,'')) LIKE '%lookup %' OR lower(coalesce(log,'')) LIKE '%lookup %') GROUP BY target ORDER BY issues DESC LIMIT 10",
+              "vrlFunctionQuery": "",
+              "customQuery": true,
+              "fields": {
+                "stream": "k8s_platform",
+                "stream_type": "logs",
+                "x": [
+                  {
+                    "label": "target",
+                    "alias": "target",
+                    "type": "build",
+                    "color": null,
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "target",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "y": [
+                  {
+                    "label": "issues",
+                    "alias": "issues",
+                    "type": "build",
+                    "color": "#5960b2",
+                    "functionName": "count",
+                    "args": [
+                      {
+                        "type": "field",
+                        "value": {
+                          "field": "issues",
+                          "streamAlias": null
+                        }
+                      }
+                    ],
+                    "isDerived": false,
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": true,
+                    "showFieldAsJson": false
+                  }
+                ],
+                "z": [],
+                "breakdown": [],
+                "filter": {
+                  "filterType": "group",
+                  "logicalOperator": "AND",
+                  "conditions": []
+                }
+              },
+              "config": {
+                "promql_legend": "",
+                "layer_type": "scatter",
+                "weight_fixed": 1,
+                "limit": 0,
+                "min": 0,
+                "max": 100,
+                "time_shift": []
+              }
+            }
+          ],
+          "layout": {
+            "x": 34,
+            "y": 48,
+            "w": 67,
+            "h": 15,
+            "i": 13
+          },
+          "htmlContent": "",
+          "markdownContent": "",
+          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
+        },
+        {
+          "id": "Panel_ID2015",
           "type": "table",
-          "title": "Latest Errors",
+          "title": "Latest Platform Errors",
           "description": "",
           "config": {
             "show_legends": false,
@@ -1480,7 +1441,7 @@
             },
             "drilldown": [
               {
-                "name": "open log",
+                "name": "Go to log",
                 "type": "logs",
                 "targetBlank": true,
                 "findBy": "name",
@@ -1518,37 +1479,13 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT \n  _timestamp,\n  kubernetes_namespace_name,\n  kubernetes_pod_name,\n  kubernetes_container_name,\n  coalesce(message, msg, log) AS error_message\nFROM \"k8s_apps\"\nWHERE \n  kubernetes_pod_name IN ($pod)\n  AND (\n       lower(coalesce(level, '')) = 'error'\n    OR lower(coalesce(message, '')) LIKE '%error%'\n    OR lower(coalesce(msg, '')) LIKE '%error%'\n    OR lower(coalesce(log, '')) LIKE '%error%'\n    OR lower(coalesce(message, '')) LIKE '%exception%'\n    OR lower(coalesce(msg, '')) LIKE '%exception%'\n    OR lower(coalesce(log, '')) LIKE '%exception%'\n    OR lower(coalesce(message, '')) LIKE '%panic%'\n    OR lower(coalesce(msg, '')) LIKE '%panic%'\n    OR lower(coalesce(log, '')) LIKE '%panic%'\n  )\nORDER BY _timestamp DESC\nLIMIT 100",
+              "query": "SELECT \n  _timestamp,\n  kubernetes_namespace_name,\n  kubernetes_pod_name,\n  kubernetes_container_name,\n  coalesce(error, message, msg, log) AS error_message\nFROM \"k8s_platform\"\nWHERE \n   kubernetes_namespace_name not like 'logging'\n   AND (\n\n      lower(coalesce(level, '')) = 'error'\n  OR lower(coalesce(severity, '')) = 'error'\n  OR coalesce(error, '') <> ''\n  \n  -- Real error keywords (more targeted)\n  OR lower(coalesce(message, msg, log, '')) LIKE '%exception%'\n  OR lower(coalesce(message, msg, log, '')) LIKE '%panic%'\n  OR lower(coalesce(message, msg, log, '')) LIKE '%error%' AND NOT lower(coalesce(message, msg, log, '')) LIKE '%http/1.1%'\n  OR lower(coalesce(message, msg, log, '')) LIKE '%failed%' AND NOT lower(coalesce(message, msg, log, '')) LIKE '%http/1.1%'\n  \n  -- Optional: catch real 4xx/5xx if status field exists\n  OR (status IS NOT NULL AND status >= 400)\n  -- Extra protection: explicitly exclude nginx/proxy access logs\n  AND NOT lower(coalesce(message, msg, log, '')) LIKE '% 200 %'\n  AND NOT lower(coalesce(message, msg, log, '')) LIKE '%\"GET %'\n   )\n\nORDER BY _timestamp DESC\nLIMIT 100",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
-                "stream": "k8s_apps",
+                "stream": "k8s_platform",
                 "stream_type": "logs",
                 "x": [
-                  {
-                    "label": "timestamp",
-                    "alias": "_timestamp",
-                    "type": "build",
-                    "color": null,
-                    "functionName": "histogram",
-                    "sortBy": "DESC",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "_timestamp",
-                          "streamAlias": null
-                        }
-                      },
-                      {
-                        "type": "histogramInterval"
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": false,
-                    "showFieldAsJson": false
-                  },
                   {
                     "label": "kubernetes_namespace_name",
                     "alias": "kubernetes_namespace_name",
@@ -1624,29 +1561,35 @@
                     "havingConditions": [],
                     "treatAsNonTimestamp": true,
                     "showFieldAsJson": false
-                  }
-                ],
-                "y": [],
-                "z": [],
-                "breakdown": [
+                  },
                   {
-                    "label": "kubernetes_container_name",
-                    "alias": "kubernetes_container_name",
+                    "label": "_timestamp",
+                    "alias": "_timestamp",
                     "type": "build",
                     "color": null,
+                    "functionName": "histogram",
+                    "sortBy": "DESC",
                     "args": [
                       {
                         "type": "field",
                         "value": {
-                          "field": "kubernetes_container_name",
+                          "field": "_timestamp",
                           "streamAlias": null
                         }
+                      },
+                      {
+                        "type": "histogramInterval"
                       }
                     ],
                     "isDerived": false,
-                    "havingConditions": []
+                    "havingConditions": [],
+                    "treatAsNonTimestamp": false,
+                    "showFieldAsJson": false
                   }
                 ],
+                "y": [],
+                "z": [],
+                "breakdown": [],
                 "filter": {
                   "filterType": "group",
                   "logicalOperator": "AND",
@@ -1666,167 +1609,10 @@
           ],
           "layout": {
             "x": 0,
-            "y": 28,
-            "w": 91,
-            "h": 24,
-            "i": 4
-          },
-          "htmlContent": "",
-          "markdownContent": "",
-          "customChartContent": " // To know more about ECharts , \n// visit: https://echarts.apache.org/examples/en/index.html \n// Example: https://echarts.apache.org/examples/en/editor.html?c=line-simple \n// Define your ECharts 'option' here. \n// 'data' variable is available for use and contains the response data from the search result and it is an array.\noption = {  \n \n};\n  "
-        },
-        {
-          "id": "Panel_ID1011",
-          "type": "h-bar",
-          "title": "HTTP Status Distribution",
-          "description": "",
-          "config": {
-            "show_legends": true,
-            "legends_position": "bottom",
-            "unit": "numbers",
-            "decimals": 5,
-            "step_value": "0",
-            "top_results_others": false,
-            "axis_border_show": false,
-            "label_option": {
-              "rotate": 0
-            },
-            "show_symbol": false,
-            "line_interpolation": "smooth",
-            "legend_width": {
-              "unit": "px"
-            },
-            "legend_height": {
-              "unit": "px"
-            },
-            "base_map": null,
-            "map_type": {
-              "type": "world"
-            },
-            "map_view": null,
-            "map_symbol_style": {
-              "size": "by Value",
-              "size_by_value": {
-                "min": 1,
-                "max": 100
-              },
-              "size_fixed": 2
-            },
-            "drilldown": [],
-            "mark_line": [],
-            "connect_nulls": false,
-            "no_value_replacement": "",
-            "wrap_table_cells": false,
-            "table_transpose": false,
-            "table_dynamic_columns": false,
-            "color": {
-              "mode": "palette-classic",
-              "fixedColor": [],
-              "seriesBy": "last",
-              "colorBySeries": []
-            },
-            "trellis": {
-              "layout": "auto",
-              "num_of_columns": 1,
-              "group_by_y_axis": true
-            },
-            "show_gridlines": true
-          },
-          "queryType": "sql",
-          "queries": [
-            {
-              "query": "SELECT \n    CASE \n        WHEN status >= 500 THEN '5xx' \n        WHEN status >= 400 THEN '4xx' \n        WHEN status >= 300 THEN '3xx' \n        WHEN status >= 200 THEN '2xx' \n        ELSE 'other' \n    END AS status_group, \n    count(*) AS total \nFROM \"k8s_apps\" \nWHERE status IS NOT NULL \n  AND kubernetes_pod_name IN ($pod)\nGROUP BY status_group \nORDER BY total ASC",
-              "vrlFunctionQuery": "",
-              "customQuery": true,
-              "fields": {
-                "stream": "k8s_apps",
-                "stream_type": "logs",
-                "x": [
-                  {
-                    "label": "status_group",
-                    "alias": "status_group",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "status_group",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "y": [
-                  {
-                    "label": "total",
-                    "alias": "total",
-                    "type": "build",
-                    "color": "#5960b2",
-                    "functionName": "count",
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "total",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": [],
-                    "treatAsNonTimestamp": true,
-                    "showFieldAsJson": false
-                  }
-                ],
-                "z": [],
-                "breakdown": [
-                  {
-                    "label": "status_group",
-                    "alias": "status_group",
-                    "type": "build",
-                    "color": null,
-                    "args": [
-                      {
-                        "type": "field",
-                        "value": {
-                          "field": "status_group",
-                          "streamAlias": null
-                        }
-                      }
-                    ],
-                    "isDerived": false,
-                    "havingConditions": []
-                  }
-                ],
-                "filter": {
-                  "filterType": "group",
-                  "logicalOperator": "AND",
-                  "conditions": []
-                }
-              },
-              "config": {
-                "promql_legend": "",
-                "layer_type": "scatter",
-                "weight_fixed": 1,
-                "limit": 0,
-                "min": 0,
-                "max": 100,
-                "time_shift": []
-              }
-            }
-          ],
-          "layout": {
-            "x": 91,
-            "y": 0,
-            "w": 100,
-            "h": 28,
-            "i": 5
+            "y": 63,
+            "w": 190,
+            "h": 35,
+            "i": 15
           },
           "htmlContent": "",
           "markdownContent": "",
@@ -1836,41 +1622,11 @@
     }
   ],
   "variables": {
-    "list": [
-      {
-        "type": "query_values",
-        "name": "pod",
-        "label": "Pod",
-        "query_data": {
-          "stream_type": "logs",
-          "stream": "k8s_apps",
-          "field": "kubernetes_pod_name",
-          "max_record_size": 100
-        },
-        "value": "_o2_all_",
-        "options": [
-          {
-            "label": "",
-            "value": "",
-            "selected": true
-          }
-        ],
-        "multiSelect": true,
-        "hideOnDashboard": false,
-        "selectAllValueForMultiSelect": "all",
-        "customMultiSelectValue": [],
-        "escapeSingleQuotes": true,
-        "scope": "global",
-        "tabs": [],
-        "panels": []
-      }
-    ],
+    "list": [],
     "showDynamicFilters": true
   },
   "defaultDatetimeDuration": {
     "type": "relative",
-    "relativeTimePeriod": "15m",
-    "startTime": 1775660618832000,
-    "endTime": 1775661518832000
+    "relativeTimePeriod": "15m"
   }
 }
