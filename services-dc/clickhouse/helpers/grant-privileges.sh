@@ -4,11 +4,27 @@
 ADMIN_USER="clickuser"
 ADMIN_PASSWORD="clickuser"
 
-echo "Granting privileges to pulse_gateway user using admin account..."
+# Target user and database
+TARGET_USER="database_name"
+CLICKHOUSE_HOST="localhost"
+CLICKHOUSE_HTTP_PORT="8123"
 
-# Grant all necessary privileges to databasenamehere user
-curl -s "http://localhost:8123/?user=$ADMIN_USER&password=$ADMIN_PASSWORD" \
-  -d "GRANT CREATE DATABASE, CREATE TABLE, INSERT, SELECT, ALTER, DROP TABLE ON *.* TO databasenamehere" \
+echo "Granting privileges to $TARGET_USER user using admin account..."
+
+# Grant all necessary privileges including DROP DATABASE
+curl -s "http://$CLICKHOUSE_HOST:$CLICKHOUSE_HTTP_PORT/?user=$ADMIN_USER&password=$ADMIN_PASSWORD" \
+  -d "GRANT CREATE DATABASE, CREATE TABLE, INSERT, SELECT, ALTER, DROP TABLE, DROP DATABASE ON *.* TO $TARGET_USER" \
+  -H "X-ClickHouse-Format: TabSeparated"
+
+# Also grant system privileges that might be needed
+curl -s "http://$CLICKHOUSE_HOST:$CLICKHOUSE_HTTP_PORT/?user=$ADMIN_USER&password=$ADMIN_PASSWORD" \
+  -d "GRANT SYSTEM MERGES, SYSTEM TTL MERGES ON *.* TO $TARGET_USER" \
   -H "X-ClickHouse-Format: TabSeparated"
 
 echo "Privileges granted successfully!"
+
+# Verify the grants
+echo "Current privileges for $TARGET_USER:"
+curl -s "http://$CLICKHOUSE_HOST:$CLICKHOUSE_HTTP_PORT/?user=$ADMIN_USER&password=$ADMIN_PASSWORD" \
+  -d "SHOW GRANTS FOR $TARGET_USER" \
+  -H "X-ClickHouse-Format: TabSeparated"
