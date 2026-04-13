@@ -54,6 +54,13 @@ data:
             - source fluentbit
             - log_type kubernetes
 
+        - name: grep
+          match: kube.*
+          exclude:
+            - url ^(/health|/healthz|/ready|readyz|/live|/ping|/status|/api/health)$
+            - method GET
+            - status 200
+
         - name: rewrite_tag
           match: kube.*
           rule:
