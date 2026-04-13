@@ -87,3 +87,41 @@ networkPolicy:
 
 podAnnotations: {}
 podLabels: {}
+
+luaScripts:
+  filter_health.lua: |
+    function drop_health_200(tag, ts, record)
+      local url = record["url"]
+      local status = tonumber(record["status"])
+
+      -- Case 1: structured logs (already parsed)
+      if url and status then
+        if (url == "/health" or
+            url == "/healthz" or
+            url == "/ready" or
+            url == "/readyz" or
+            url == "/live" or
+            url == "/ping" or
+            url == "/status" or
+            url == "/api/health")
+          and status == 200 then
+          return -1, ts, record
+        end
+      end
+
+      -- Case 2: raw log string
+      local log = record["log"]
+      if log then
+        -- match: "GET .../health... HTTP/1.1" ... - 200
+        local is_health = string.match(log, 'GET%s+.-/(healthz?|readyz?|live|ping|status|api/health)')
+        local is_200 = string.match(log, '%s%- %s*200%s')
+
+        if is_health and is_200 then
+          return -1, ts, record
+        end
+      end
+
+      return 1, ts, record
+    end
+
+

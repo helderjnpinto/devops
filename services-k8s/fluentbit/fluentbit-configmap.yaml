@@ -54,12 +54,10 @@ data:
             - source fluentbit
             - log_type kubernetes
 
-        - name: grep
+        - name: lua
           match: kube.*
-          exclude:
-            - url ^(/health|/healthz|/ready|readyz|/live|/ping|/status|/api/health)$
-            - method GET
-            - status 200
+          script: /fluent-bit/scripts/filter_health.lua
+          call: drop_health_200
 
         - name: rewrite_tag
           match: kube.*
