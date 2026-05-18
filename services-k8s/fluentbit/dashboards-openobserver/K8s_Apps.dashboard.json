@@ -48,7 +48,29 @@
               },
               "size_fixed": 2
             },
-            "drilldown": [],
+            "drilldown": [
+              {
+                "name": "Go to logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "SELECT *\nFROM \"k8s_apps\"\nWHERE\n  lower(coalesce(level,'')) = 'error'\n  OR lower(coalesce(message,'')) LIKE '%error%'\n  OR lower(coalesce(msg,'')) LIKE '%error%'\n  OR lower(coalesce(log,'')) LIKE '%error%'\n  OR lower(coalesce(message,'')) LIKE '%exception%'\n  OR lower(coalesce(msg,'')) LIKE '%exception%'\n  OR lower(coalesce(log,'')) LIKE '%exception%'\n  OR lower(coalesce(message,'')) LIKE '%panic%'\n  OR lower(coalesce(msg,'')) LIKE '%panic%'\n  OR lower(coalesce(log,'')) LIKE '%panic%'"
+                }
+              }
+            ],
             "connect_nulls": false,
             "no_value_replacement": "",
             "wrap_table_cells": false,
@@ -455,7 +477,29 @@
               },
               "size_fixed": 2
             },
-            "drilldown": [],
+            "drilldown": [
+              {
+                "name": "Go to namespace logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "Select * from 'k8s_apps' where kubernetes_namespace_name = ${series.__name}"
+                }
+              }
+            ],
             "connect_nulls": false,
             "no_value_replacement": "",
             "wrap_table_cells": false,
@@ -478,7 +522,7 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT kubernetes_namespace_name AS namespace, count(_timestamp) AS logs FROM \"k8s_apps\" WHERE kubernetes_namespace_name IS NOT NULL GROUP BY namespace ORDER BY logs DESC LIMIT 10",
+              "query": "SELECT kubernetes_namespace_name AS namespace, count(_timestamp) AS logs FROM \"k8s_apps\" WHERE kubernetes_namespace_name IS NOT NULL GROUP BY kubernetes_namespace_name ORDER BY logs DESC LIMIT 10",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
@@ -615,6 +659,27 @@
                   ],
                   "logsMode": "auto",
                   "logsQuery": ""
+                }
+              },
+              {
+                "name": "Go to pod logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "SELECT *\nFROM \"k8s_apps\"\nWHERE kubernetes_pod_name = ${series.__name}\nORDER BY _timestamp DESC"
                 }
               }
             ],
@@ -756,7 +821,29 @@
               },
               "size_fixed": 2
             },
-            "drilldown": [],
+            "drilldown": [
+              {
+                "name": "Go to pod logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "SELECT *\nFROM \"k8s_apps\"\nWHERE kubernetes_labels_app = ${series.__axisValue}\nORDER BY _timestamp DESC"
+                }
+              }
+            ],
             "mark_line": [],
             "connect_nulls": false,
             "no_value_replacement": "",
@@ -902,7 +989,29 @@
               },
               "size_fixed": 2
             },
-            "drilldown": [],
+            "drilldown": [
+              {
+                "name": "Go to logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "SELECT *\nFROM \"k8s_apps\";"
+                }
+              }
+            ],
             "mark_line": [],
             "override_config": [],
             "connect_nulls": false,

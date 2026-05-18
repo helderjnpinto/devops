@@ -450,9 +450,80 @@
             "legends_position": "right",
             "unit": "numbers",
             "decimals": 0,
+            "step_value": "0",
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "legend_height": {
+              "unit": "px"
+            },
             "base_map": null,
+            "map_type": {
+              "type": "world"
+            },
             "map_view": null,
-            "connect_nulls": false
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [
+              {
+                "name": "Go to logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "SELECT *\nFROM \"k8s_platform\"\nWHERE _timestamp < TIMESTAMP ${end_time}\n  AND (\n    lower(coalesce(level,'')) = 'error'\n    OR lower(coalesce(message,'')) LIKE '%error%'\n    OR lower(coalesce(msg,'')) LIKE '%error%'\n    OR lower(coalesce(log,'')) LIKE '%error%'\n    OR lower(coalesce(message,'')) LIKE '%exception%'\n    OR lower(coalesce(msg,'')) LIKE '%exception%'\n    OR lower(coalesce(log,'')) LIKE '%exception%'\n    OR lower(coalesce(message,'')) LIKE '%panic%'\n    OR lower(coalesce(msg,'')) LIKE '%panic%'\n    OR lower(coalesce(log,'')) LIKE '%panic%'\n    OR lower(coalesce(message,'')) LIKE '%failed%'\n    OR lower(coalesce(msg,'')) LIKE '%failed%'\n    OR lower(coalesce(log,'')) LIKE '%failed%'\n  )\nORDER BY _timestamp DESC\nLIMIT ${series.__value}"
+                }
+              }
+            ],
+            "mark_line": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [],
+              "seriesBy": "last",
+              "colorBySeries": [
+                {
+                  "type": "value",
+                  "value": "logs",
+                  "color": "#00ab80"
+                }
+              ]
+            },
+            "trellis": {
+              "layout": null,
+              "num_of_columns": 1,
+              "group_by_y_axis": false
+            },
+            "show_gridlines": true
           },
           "queryType": "sql",
           "queries": [
@@ -573,7 +644,29 @@
               },
               "size_fixed": 2
             },
-            "drilldown": [],
+            "drilldown": [
+              {
+                "name": "Go to logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "SELECT *\nFROM \"k8s_platform\"\nWHERE _timestamp < ${end_time}\n  AND (\n    lower(coalesce(level,'')) = 'error'\n    OR lower(coalesce(message,'')) LIKE '%error%'\n    OR lower(coalesce(msg,'')) LIKE '%error%'\n    OR lower(coalesce(log,'')) LIKE '%error%'\n    OR lower(coalesce(message,'')) LIKE '%exception%'\n    OR lower(coalesce(msg,'')) LIKE '%exception%'\n    OR lower(coalesce(log,'')) LIKE '%exception%'\n    OR lower(coalesce(message,'')) LIKE '%panic%'\n    OR lower(coalesce(msg,'')) LIKE '%panic%'\n    OR lower(coalesce(log,'')) LIKE '%panic%'\n    OR lower(coalesce(message,'')) LIKE '%failed%'\n    OR lower(coalesce(msg,'')) LIKE '%failed%'\n    OR lower(coalesce(log,'')) LIKE '%failed%'\n  )\nORDER BY _timestamp DESC\nLIMIT 200"
+                }
+              }
+            ],
             "mark_line": [],
             "connect_nulls": false,
             "no_value_replacement": "",
@@ -703,8 +796,74 @@
             "legends_position": null,
             "unit": "numbers",
             "decimals": 0,
+            "step_value": "0",
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "legend_height": {
+              "unit": "px"
+            },
             "base_map": null,
-            "map_view": null
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": null,
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [
+              {
+                "name": "Go to logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "Select * from 'k8s_platform' where kubernetes_namespace_name = ${series.__axisValue}"
+                }
+              }
+            ],
+            "mark_line": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [],
+              "seriesBy": "last",
+              "colorBySeries": []
+            },
+            "trellis": {
+              "layout": null,
+              "num_of_columns": 1,
+              "group_by_y_axis": false
+            },
+            "show_gridlines": true
           },
           "queryType": "sql",
           "queries": [
@@ -798,8 +957,74 @@
             "legends_position": null,
             "unit": "numbers",
             "decimals": 0,
+            "step_value": "0",
+            "top_results_others": false,
+            "axis_border_show": false,
+            "label_option": {
+              "rotate": 0
+            },
+            "show_symbol": false,
+            "line_interpolation": "smooth",
+            "legend_width": {
+              "unit": "px"
+            },
+            "legend_height": {
+              "unit": "px"
+            },
             "base_map": null,
-            "map_view": null
+            "map_type": {
+              "type": "world"
+            },
+            "map_view": null,
+            "map_symbol_style": {
+              "size": "by Value",
+              "size_by_value": {
+                "min": 1,
+                "max": 100
+              },
+              "size_fixed": 2
+            },
+            "drilldown": [
+              {
+                "name": "Go to logs",
+                "type": "logs",
+                "targetBlank": true,
+                "findBy": "name",
+                "data": {
+                  "url": "",
+                  "folder": "",
+                  "dashboard": "",
+                  "tab": "",
+                  "passAllVariables": true,
+                  "variables": [
+                    {
+                      "name": "",
+                      "value": ""
+                    }
+                  ],
+                  "logsMode": "custom",
+                  "logsQuery": "Select * from 'k8s_platform' where kubernetes_pod_name = ${series.__axisValue}"
+                }
+              }
+            ],
+            "mark_line": [],
+            "connect_nulls": false,
+            "no_value_replacement": "",
+            "wrap_table_cells": false,
+            "table_transpose": false,
+            "table_dynamic_columns": false,
+            "color": {
+              "mode": "palette-classic-by-series",
+              "fixedColor": [],
+              "seriesBy": "last",
+              "colorBySeries": []
+            },
+            "trellis": {
+              "layout": null,
+              "num_of_columns": 1,
+              "group_by_y_axis": false
+            },
+            "show_gridlines": true
           },
           "queryType": "sql",
           "queries": [
@@ -943,7 +1168,7 @@
           "queryType": "sql",
           "queries": [
             {
-              "query": "SELECT coalesce(nodename, kubernetes_host) AS node, count(_timestamp) AS errors FROM \"k8s_platform\" WHERE coalesce(nodename, kubernetes_host) IS NOT NULL AND (lower(coalesce(level,'')) = 'error' OR lower(coalesce(severity,'')) = 'error' OR coalesce(error,'') <> '' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%') GROUP BY node ORDER BY errors DESC LIMIT 10",
+              "query": "SELECT coalesce(nodename, kubernetes_host) AS node, count(_timestamp) AS errors FROM \"k8s_platform\" WHERE coalesce(nodename, kubernetes_host) IS NOT NULL AND (lower(coalesce(level,'')) = 'error' OR lower(coalesce(severity,'')) = 'error' OR coalesce(error,'') <> '' OR lower(coalesce(message,'')) LIKE '%error%' OR lower(coalesce(msg,'')) LIKE '%error%' OR lower(coalesce(log,'')) LIKE '%error%' OR lower(coalesce(message,'')) LIKE '%failed%' OR lower(coalesce(msg,'')) LIKE '%failed%' OR lower(coalesce(log,'')) LIKE '%failed%') GROUP BY coalesce(nodename, kubernetes_host) ORDER BY errors DESC LIMIT 10",
               "vrlFunctionQuery": "",
               "customQuery": true,
               "fields": {
@@ -1622,7 +1847,36 @@
     }
   ],
   "variables": {
-    "list": [],
+    "list": [
+      {
+        "type": "query_values",
+        "name": "node",
+        "label": "Node",
+        "query_data": {
+          "stream_type": "logs",
+          "stream": "k8s_platform",
+          "field": "kubernetes_host",
+          "max_record_size": null,
+          "filter": []
+        },
+        "value": "",
+        "options": [
+          {
+            "label": "",
+            "value": "",
+            "selected": true
+          }
+        ],
+        "multiSelect": true,
+        "hideOnDashboard": false,
+        "selectAllValueForMultiSelect": "all",
+        "customMultiSelectValue": [],
+        "escapeSingleQuotes": false,
+        "scope": "global",
+        "tabs": [],
+        "panels": []
+      }
+    ],
     "showDynamicFilters": true
   },
   "defaultDatetimeDuration": {
