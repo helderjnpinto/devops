@@ -1,0 +1,18 @@
+<clickhouse>
+    <!--
+        User configuration for clickhouse-rd.
+        
+        The ClickHouse docker entrypoint handles user creation from the
+        CLICKHOUSE_USER, CLICKHOUSE_PASSWORD, and CLICKHOUSE_DATABASE
+        environment variables automatically, so this file is minimal.
+        
+        It only ensures the default profile has adequate limits and
+        does not grant anonymous access.
+    -->
+    <profiles>
+        <default>
+            <max_memory_usage>10000000000</max_memory_usage>
+            <load_balancing>in_order</load_balancing>
+        </default>
+    </profiles>
+</clickhouse>

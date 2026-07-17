@@ -1,0 +1,69 @@
+<clickhouse>
+    <!--
+        Storage configuration for clickhouse-rd.
+
+        Three logical disks:
+          - default       : local ClickHouse filesystem (hot)
+          - s3_cold       : MinIO bucket for cold table parts
+          - s3_backup     : MinIO bucket for native BACKUP / RESTORE only
+
+        One storage policy:
+          - hot_cold      : default (hot) → s3_cold (cold), via TTL move
+
+        NOTE: Bucket names and credentials are resolved via from_env or
+        hardcoded here since ClickHouse does not expand ${VAR} in config
+        file values as environment variables (only as config parameters).
+    -->
+
+    <storage_configuration>
+        <disks>
+            <!-- Built-in local disk — always present -->
+            <default>
+                <keep_free_space>1073741824</keep_free_space> <!-- 1 GiB -->
+            </default>
+
+            <!-- S3 disk for cold table parts -->
+            <s3_cold>
+                <type>s3</type>
+                <endpoint>http://minio:9000/clickhouse-data/</endpoint>
+                <access_key_id from_env="MINIO_ROOT_USER"></access_key_id>
+                <secret_access_key from_env="MINIO_ROOT_PASSWORD"></secret_access_key>
+                <use_environment_credentials>false</use_environment_credentials>
+                <region>us-east-1</region>
+                <metadata_path>/var/lib/clickhouse/disks/s3_cold/</metadata_path>
+                <cache_enabled>true</cache_enabled>
+                <cache_path>/var/lib/clickhouse/disks/s3_cold/cache/</cache_path>
+                <cache_size>10737418240</cache_size> <!-- 10 GiB -->
+            </s3_cold>
+
+            <!-- S3 disk for native backups only — NOT used as a MergeTree volume -->
+            <s3_backup>
+                <type>s3_plain</type>
+                <endpoint>http://minio:9000/clickhouse-backups/</endpoint>
+                <access_key_id from_env="MINIO_ROOT_USER"></access_key_id>
+                <secret_access_key from_env="MINIO_ROOT_PASSWORD"></secret_access_key>
+                <use_environment_credentials>false</use_environment_credentials>
+                <region>us-east-1</region>
+            </s3_backup>
+        </disks>
+
+        <policies>
+            <hot_cold>
+                <volumes>
+                    <hot>
+                        <disk>default</disk>
+                    </hot>
+                    <cold>
+                        <disk>s3_cold</disk>
+                    </cold>
+                </volumes>
+                <move_factor>0.1</move_factor>
+            </hot_cold>
+        </policies>
+    </storage_configuration>
+
+    <!-- Allow the s3_backup disk for BACKUP and RESTORE statements -->
+    <backups>
+        <allowed_disk>s3_backup</allowed_disk>
+    </backups>
+</clickhouse>

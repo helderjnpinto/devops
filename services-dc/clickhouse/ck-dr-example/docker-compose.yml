@@ -1,0 +1,95 @@
+# =============================================================================
+# clickhouse-rd — Docker Compose
+# =============================================================================
+# Single-node ClickHouse with hot/cold storage backed by MinIO.
+# =============================================================================
+
+services:
+
+  # --------------------------------------------------------------------------
+  # MinIO — S3-compatible object store for cold data and backups
+  # --------------------------------------------------------------------------
+  minio:
+    image: quay.io/minio/minio:${MINIO_VERSION}
+    container_name: clickhouse-rd-minio
+    command: server /data --console-address ":9002"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9002"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # minio-init — idempotent bucket creation
+  # --------------------------------------------------------------------------
+  minio-init:
+    image: quay.io/minio/mc:${MINIO_MC_VERSION}
+    container_name: clickhouse-rd-minio-init
+    entrypoint: >
+      /bin/sh -c "
+        set -euo pipefail;
+        echo 'Waiting for MinIO...';
+        until mc config host add clickhouse-rd http://minio:9000 '${MINIO_ROOT_USER}' '${MINIO_ROOT_PASSWORD}' --api s3v4 2>/dev/null; do
+          sleep 1;
+        done;
+        echo 'MinIO ready. Creating buckets...';
+        mc mb clickhouse-rd/${MINIO_DATA_BUCKET} --ignore-existing 2>/dev/null;
+        mc mb clickhouse-rd/${MINIO_BACKUP_BUCKET} --ignore-existing 2>/dev/null;
+        echo 'Buckets ready:';
+        mc ls clickhouse-rd;
+        echo 'Initialization complete.';
+      "
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+
+  # --------------------------------------------------------------------------
+  # ClickHouse Server
+  # --------------------------------------------------------------------------
+  clickhouse:
+    image: clickhouse/clickhouse-server:${CLICKHOUSE_VERSION}
+    container_name: clickhouse-rd-server
+    environment:
+      CLICKHOUSE_DATABASE: ${CLICKHOUSE_DATABASE}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_DATA_BUCKET: ${MINIO_DATA_BUCKET}
+      MINIO_BACKUP_BUCKET: ${MINIO_BACKUP_BUCKET}
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT}:8123"
+      - "${CLICKHOUSE_NATIVE_PORT}:9000"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./clickhouse/config.d/logging.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - ./clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml:ro
+      - ./clickhouse/users.d/local-user.xml:/etc/clickhouse-server/users.d/local-user.xml:ro
+      - ./clickhouse/initdb.d:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping 2>&1
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  clickhouse-data:
+    name: clickhouse-rd-clickhouse-data
+  minio-data:
+    name: clickhouse-rd-minio-data

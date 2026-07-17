@@ -1,0 +1,9 @@
+# Environment — contains credentials
+.env
+
+# Last backup tracking
+.last-backup
+
+# Transient artifacts
+*.log
+tmp/
