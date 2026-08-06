@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  kopia:
+    image: kopia/kopia:latest
+    container_name: kopia
+    restart: unless-stopped
+
+    ports:
+      - "51515:51515"
+
+    command: >
+      server start
+      --insecure
+      --address=0.0.0.0:51515
+      --server-username=admin
+      --server-password=PASSWORD_CHANGE_ME
+
+    environment:
+      TZ: Europe/Lisbon
+
+    volumes:
+      # config e cache do Kopia
+      - ./config:/app/config
+      - ./cache:/app/cache
+
+      # Backup do Vaultwarden
+      - /home/user/vaultwarden/vw-data:/backup/vaultwarden:ro
