@@ -1,0 +1,12 @@
+# Kopia — sensitive / local data (never commit)
+config/
+cache/
+logs/
+restored/
+
+# Repository credentials / config with secrets
+repository.config
+repository.config.bak
+
+# Local test data
+test-restore/restored/

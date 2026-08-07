@@ -1,0 +1,32 @@
+# Caddyfile — HTTPS reverse proxy for Vaultwarden
+#
+# Two modes:
+#   1. PRODUCTION  : use your real domain (e.g. vault.yourdomain.com) — Caddy
+#                    obtains an automatic Let's Encrypt certificate.
+#   2. LOCAL TESTING: use the https://localhost block with 'tls internal'
+#                    (self-signed certificate) on https://localhost:18443
+#
+# Comment/uncomment the block for the desired mode.
+
+{
+    # Disable the admin endpoint (not needed here)
+    admin off
+}
+
+# ---------------------------------------------------------------------------
+# PRODUCTION MODE — automatic Let's Encrypt certificate
+# ---------------------------------------------------------------------------
+# https://vault.yourdomain.com {
+#     reverse_proxy vaultwarden:80
+# }
+
+# ---------------------------------------------------------------------------
+# LOCAL TESTING MODE — self-signed certificate
+# ---------------------------------------------------------------------------
+https://localhost {
+    # Local self-signed certificate (generated and renewed automatically)
+    tls internal
+
+    # Forward all traffic to the vaultwarden service on the internal network
+    reverse_proxy vaultwarden:80
+}

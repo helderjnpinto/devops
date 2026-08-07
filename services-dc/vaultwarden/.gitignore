@@ -1,0 +1,9 @@
+# Vaultwarden — sensitive / local data (never commit)
+.env
+vw-data/
+backups/
+restored/
+
+# Caddy data volumes (certificates, keys)
+caddy_data/
+caddy_config/

@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   kopia:
     image: kopia/kopia:latest
@@ -14,15 +12,24 @@ services:
       --insecure
       --address=0.0.0.0:51515
       --server-username=admin
-      --server-password=PASSWORD_CHANGE_ME
+      --server-password=CHANGE_ME
 
     environment:
       TZ: Europe/Lisbon
+      # Repository encryption password (required to connect/create the repo)
+      # CHANGE_ME: use a strong, unique password and keep it safe — without it
+      # the repository data cannot be read.
+      KOPIA_PASSWORD: "CHANGE_ME"
+      # S3 storage credentials for the repository
+      # CHANGE_ME: use IAM scoped to the backup bucket only (least privilege)
+      AWS_ACCESS_KEY_ID: "CHANGE_ME"
+      AWS_SECRET_ACCESS_KEY: "CHANGE_ME"
 
     volumes:
-      # config e cache do Kopia
+      # Kopia config and cache
       - ./config:/app/config
       - ./cache:/app/cache
 
-      # Backup do Vaultwarden
-      - /home/user/vaultwarden/vw-data:/backup/vaultwarden:ro
+      # Vaultwarden data to back up (read-only - least privilege)
+      # IMPORTANT: point to the real Vaultwarden data directory
+      - /path/to/vaultwarden/vw-data:/backup/vaultwarden:ro

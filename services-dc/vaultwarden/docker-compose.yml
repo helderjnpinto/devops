@@ -1,0 +1,59 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+
+    # Vaultwarden does not expose ports publicly — traffic enters via Caddy.
+    # The web vault requires HTTPS (Web Crypto API), served by Caddy.
+
+    environment:
+      TZ: Europe/Lisbon
+      # Public URL of the service (HTTPS). Adjust DOMAIN to your real domain.
+      # For local testing use: https://localhost:18443
+      DOMAIN: "https://vault.yourdomain.com"
+
+      # Admin token (recommended for the /admin panel).
+      # Generate with: openssl rand -base64 48
+      ADMIN_TOKEN: ""
+
+      # Access logging
+      LOG_LEVEL: info
+
+      # WebSocket for desktop/mobile clients
+      WEBSOCKET_ENABLED: "true"
+
+      # Upload limits (attachments)
+      SIGNUPS_ALLOWED: "false"
+
+    volumes:
+      # Vaultwarden persistent data (db.sqlite3, attachments, ...)
+      - ./vw-data:/data
+
+      # Vaultwarden backups (optional)
+      - ./backups:/backups
+
+  # HTTPS reverse proxy. In production uses automatic Let's Encrypt;
+  # for local testing uses a self-signed certificate ('tls internal').
+  caddy:
+    image: caddy:2
+    container_name: vaultwarden-caddy
+    restart: unless-stopped
+
+    ports:
+      - "18443:443"     # https://localhost:18443 (local testing)
+      # - "443:443"     # production: uncomment and use real port 443
+      # - "80:80"       # production: HTTP->HTTPS redirect (Let's Encrypt)
+      - "18480:80"      # (optional) HTTP for testing
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+    depends_on:
+      - vaultwarden
+
+volumes:
+  caddy_data:
+  caddy_config:
