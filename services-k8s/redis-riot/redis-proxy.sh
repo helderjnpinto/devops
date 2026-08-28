@@ -34,15 +34,26 @@ REDIS_PASSWORD="${REDIS_PASSWORD:-}"
 
 POD_NAME="redis-proxy-$$"
 PF_PID=""
-
+CREATED_NS=""
+ 
 cleanup() {
   echo ""
   echo "Cleaning up..."
   [ -n "${PF_PID}" ] && kill "${PF_PID}" 2>/dev/null || true
   kubectl delete pod -n "${NAMESPACE}" "${POD_NAME}" --wait=false 2>/dev/null || true
+  if [ -n "${CREATED_NS}" ]; then
+    kubectl delete namespace "${NAMESPACE}" --wait=false 2>/dev/null || true
+  fi
 }
 trap cleanup EXIT INT TERM
-
+ 
+# Create the namespace if it doesn't already exist (idempotent).
+if ! kubectl get namespace "${NAMESPACE}" >/dev/null 2>&1; then
+  echo "Creating namespace ${NAMESPACE}"
+  kubectl create namespace "${NAMESPACE}"
+  CREATED_NS="1"
+fi
+ 
 echo "Starting bridge pod ${POD_NAME} in namespace ${NAMESPACE} -> ${TARGET_HOST}:${TARGET_PORT}"
 kubectl run "${POD_NAME}" -n "${NAMESPACE}" --image=alpine/socat --restart=Never \
   -- "tcp-listen:${TARGET_PORT},fork,reuseaddr" "tcp:${TARGET_HOST}:${TARGET_PORT}"
