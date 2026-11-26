@@ -1,0 +1,40 @@
+# GrowthBook self-hosted (local test). Docs: https://docs.growthbook.io/self-host
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: growthbook-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  growthbook:
+    image: growthbook/growthbook:${GROWTHBOOK_VERSION}
+    container_name: growthbook
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "${GROWTHBOOK_APP_PORT:-3000}:3000"   # web UI
+      - "${GROWTHBOOK_API_PORT:-3100}:3100"   # API
+    environment:
+      MONGODB_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/growthbook?authSource=admin
+      APP_ORIGIN: ${APP_ORIGIN}
+      API_HOST: ${API_HOST}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      NODE_ENV: development
+    volumes:
+      - uploads:/usr/local/src/app/packages/back-end/uploads
+
+volumes:
+  mongodata:
+  uploads:
